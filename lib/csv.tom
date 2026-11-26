@@ -1,0 +1,48 @@
+do read(content: text, sep: text = ","): list of list of text
+    set rows: list of list of text = []
+    set row: list of text = []
+    set cell = ""
+    set inQuotes = false
+    set i = 1
+    set n = content.length
+
+    repeat while i <= n
+        set ch = content[i]
+        if inQuotes
+            if ch == "\""
+                if i < n and content[i + 1] == "\""
+                    cell += "\""
+                    i += 1
+                otherwise
+                    inQuotes = false
+                end
+            otherwise
+                cell += ch
+            end
+        otherwise
+            if ch == "\""
+                inQuotes = true
+            otherwise if ch == sep
+                row.add(cell)
+                cell = ""
+            otherwise if ch == "\n"
+                row.add(cell)
+                rows.add(row)
+                row = []
+                cell = ""
+            otherwise if ch == "\r"
+               
+            otherwise
+                cell += ch
+            end
+        end
+        i += 1
+    end
+
+    if cell.length > 0 or row.length > 0 or inQuotes
+        row.add(cell)
+        rows.add(row)
+    end
+
+    return rows
+end
